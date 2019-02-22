@@ -50,3 +50,14 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+#extra
+venv/*
+*.hdf5
+*.pyc
+.idea
+*~
+*.o
+*.so
+*.html
+
