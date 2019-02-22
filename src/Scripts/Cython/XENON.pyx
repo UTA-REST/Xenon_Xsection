@@ -1,4 +1,4 @@
- import h5py
+import h5py
 from libc.math cimport sin, cos, acos, asin, log, sqrt, exp, pow
 cimport GasUtil
 cimport libc.math
@@ -136,7 +136,6 @@ cdef void Gas7(Gas*object):
     YP2P4 = gd['gas7/YP2P4']
     X4DSUM = gd['gas7/X4DSUM']
     Y4DSUM = gd['gas7/Y4DSUM']
-    print("HERE")
     YP4DSUM = gd['gas7/YP4DSUM']
     X2P3 = gd['gas7/X2P3']
     Y2P3 = gd['gas7/Y2P3']
@@ -856,6 +855,5 @@ cdef void Gas7(Gas*object):
         if object.EFINAL <= object.EIN[J]:
             object.NIN = J
             break
-    print(object.Q[0][0])
     gd.close()
 

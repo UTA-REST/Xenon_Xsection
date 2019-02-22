@@ -71,7 +71,6 @@ cpdef MIXERT(Magboltz object):
         MIXERTOBJ.SCLN[i] = MIXOBJECT.Gases[i].SCLN
         for j in range(10):
             MIXERTOBJ.QNULL[i][j][:] = MIXOBJECT.Gases[i].QNULL[j][:]
-        print(i)
     EMASS = 9.10938291e-31
 
     for IE in range(4000):

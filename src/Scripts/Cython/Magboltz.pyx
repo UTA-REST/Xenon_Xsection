@@ -342,7 +342,6 @@ cdef class Magboltz:
                     self.EFINAL = 8.0
                 self.ESTART = self.EFINAL / 50.0
                 while self.IELOW == 1:
-                    print(str(self.API))
                     MIXERT(self)
                     if self.BMAG == 0 or self.BTHETA == 0 or abs(self.BTHETA) == 180:
                         ELIMITT(self)
