@@ -9,7 +9,6 @@ from Magboltz import Magboltz
 
 obj = Magboltz()
 E = [50,100,150,200,250,300,350,400]
-f = open("output.txt", "w")
 for i in range(8):
     obj.__init__()
     obj.NGAS =1
@@ -21,37 +20,41 @@ for i in range(8):
     obj.FRAC=[100,0,0,0,0,0]
     obj.TEMPC = 23
     obj.TORR = 750.062
-    obj.EFIELD = E[i]
+    obj.EFIELD = input("Enter EFIELD:")
+    obj.A = input("Enter A:")
+    obj.B = input("Enter B:")
+    obj.C = input("Enter C:")
+    obj.Org = input("Enter Org:")
     obj.BMAG = 0
     obj.BTHETA = 90
     try:
         obj.Start()
-        f.write(str((obj.FRAC[0]))) #CF4per
-        f.write(str(("\n")))
-        f.write(str((obj.FRAC[1]))) #ARper
-        f.write(str(("\n")))
-        f.write(str((obj.TEMPC)))   #TEMP
-        f.write(str(("\n")))
-        f.write(str((obj.TORR)))    #press
-        f.write(str(("\n")))
-        f.write(str((obj.EFIELD)))  #EFIELD
-        f.write(str(("\n")))
-        f.write(str(((obj.WZ*1e-5))))      #ZDRIFT
-        f.write(str(("\n")))
-        f.write(str((obj.DWZ)))     #ZERR
-        f.write(str(("\n")))
-        f.write(str((obj.DIFTR)))   #TDIFF
-        f.write(str(("\n")))
-        f.write(str((obj.DFTER)))  #TERR
-        f.write(str(("\n")))
-        f.write(str((obj.DIFLN)))   #LDIFF
-        f.write(str(("\n")))
-        f.write(str((obj.DFLER)))  #LERR
-        f.write(str(("\n")))
-        f.write(str((obj.AVE)))     #MELE
-        f.write(str(("\n")))
-        f.write(str((obj.DEN)))     #MERR
-        f.write(str(("\n")))
+        print(str((obj.FRAC[0]))) #CF4per
+        print(str(("\n")))
+        print(str((obj.FRAC[1]))) #ARper
+        print(str(("\n")))
+        print(str((obj.TEMPC)))   #TEMP
+        print(str(("\n")))
+        print(str((obj.TORR)))    #press
+        print(str(("\n")))
+        print(str((obj.EFIELD)))  #EFIELD
+        print(str(("\n")))
+        print(str(((obj.WZ*1e-5))))      #ZDRIFT
+        print(str(("\n")))
+        print(str((obj.DWZ)))     #ZERR
+        print(str(("\n")))
+        print(str((obj.DIFTR)))   #TDIFF
+        print(str(("\n")))
+        print(str((obj.DFTER)))  #TERR
+        print(str(("\n")))
+        print(str((obj.DIFLN)))   #LDIFF
+        print(str(("\n")))
+        print(str((obj.DFLER)))  #LERR
+        print(str(("\n")))
+        print(str((obj.AVE)))     #MELE
+        print(str(("\n")))
+        print(str((obj.DEN)))     #MERR
+        print(str(("\n")))
     except ValueError:
         print("didnt work at i =" +str(i))
 f.close()

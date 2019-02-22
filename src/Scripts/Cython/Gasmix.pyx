@@ -11,7 +11,7 @@ cdef void callGASF(Gas* GAS):
 
 cdef class Gasmix:
     def InitWithInfo(self, NGS, QIN, NIN, PENFRA, EG, EROOT, QT1, QT2, QT3, QT4, DEN, DENS, NGAS, NSTEP,
-                     NANISO, ESTEP, EFINAL, AKT, ARY, TEMPC, TORR, IPEN,PIR2):
+                     NANISO, ESTEP, EFINAL, AKT, ARY, TEMPC, TORR, IPEN,PIR2,EMT,ET,EAT):
         # First Setup
         cdef int i,j;
         for i in range(6):
@@ -40,6 +40,9 @@ cdef class Gasmix:
             self.Gases[i].TORR = TORR
             self.Gases[i].IPEN = IPEN
             self.Gases[i].PIR2 = PIR2
+            self.Gases[i].EMT = EMT
+            self.Gases[i].ET = ET
+            self.Gases[i].EAT = EAT
             memset(self.Gases[i].Q, 0, 6*4000 * sizeof(double))
             memset(self.Gases[i].QION, 0, 30*4000 * sizeof(double))
             memset(self.Gases[i].PEQION, 0, 30*4000 * sizeof(double))

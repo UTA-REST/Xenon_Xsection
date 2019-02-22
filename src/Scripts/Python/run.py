@@ -36,18 +36,18 @@ for i in range(24):
     obj.BMAG = 0
     obj.BTHETA = 90
     obj.Start()
-    f.write(obj.FRAC[0]) #CF4per
-    f.write(obj.FRAC[1]) #ARper
-    f.write(obj.TEMPC)   #TEMP
-    f.write(obj.TORR)    #press
-    f.write(obj.EFIELD)  #EFIELD
-    f.write((obj.WZ*1e-5))      #ZDRIFT
-    f.write(obj.DWZ)     #ZERR
-    f.write(obj.DIFTR)   #TDIFF
-    f.write(obj.DFTER)  #TERR
-    f.write(obj.DIFLN)   #LDIFF
-    f.write(obj.DFLER)  #LERR
-    f.write(obj.AVE)     #MELE
-    f.write(obj.DEN)     #MERR
+    print(obj.FRAC[0]) #CF4per
+    print(obj.FRAC[1]) #ARper
+    print(obj.TEMPC)   #TEMP
+    print(obj.TORR)    #press
+    print(obj.EFIELD)  #EFIELD
+    print((obj.WZ*1e-5))      #ZDRIFT
+    print(obj.DWZ)     #ZERR
+    print(obj.DIFTR)   #TDIFF
+    print(obj.DFTER)  #TERR
+    print(obj.DIFLN)   #LDIFF
+    print(obj.DFLER)  #LERR
+    print(obj.AVE)     #MELE
+    print(obj.DEN)     #MERR
 f.close()
 

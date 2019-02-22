@@ -5,6 +5,7 @@ warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 from Magboltz import Magboltz
 import numpy as np
+
 Object = Magboltz()
 
 import time

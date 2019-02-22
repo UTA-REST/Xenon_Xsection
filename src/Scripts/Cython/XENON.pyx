@@ -40,11 +40,11 @@ cdef void Gas7(Gas*object):
     cdef int IOFFN[50], IOFFION[12]
     cdef double Z54T[25], EBRM[25]
     XEN = gd['gas7/XEN']
-    YMOM = gd['gas7/YMOM']
+    YMOM = object.EMT
     XEL = gd['gas7/XEL']
-    YEL = gd['gas7/YEL']
+    YEL = object.ET
     XEPS = gd['gas7/XEPS']
-    YEPS = gd['gas7/YEPS']
+    YEPS = object.EAT
     XION = gd['gas7/XION']
     YION = gd['gas7/YION']
     YINC = gd['gas7/YINC']
