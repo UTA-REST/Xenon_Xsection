@@ -20,11 +20,11 @@ for i in range(8):
     obj.FRAC=[100,0,0,0,0,0]
     obj.TEMPC = 23
     obj.TORR = 750.062
-    obj.EFIELD = input("Enter EFIELD:")
-    obj.A = input("Enter A:")
-    obj.B = input("Enter B:")
-    obj.C = input("Enter C:")
-    obj.Org = input("Enter Org:")
+    obj.EFIELD = float(input("Enter EFIELD:"))
+    obj.A = float(input("Enter A:"))
+    obj.B = float(input("Enter B:"))
+    obj.C = float(input("Enter C:"))
+    obj.Org = float(input("Enter Org:"))
     obj.BMAG = 0
     obj.BTHETA = 90
     try:
