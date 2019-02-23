@@ -1,7 +1,6 @@
 from Magboltz cimport Magboltz
 from libc.math cimport sin, cos, acos, asin, log, sqrt
 from Gasmix cimport Gasmix
-from libc.string cimport memset
 from ANG cimport ANG
 
 import cython
@@ -12,6 +11,7 @@ import cython
 @cython.nonecheck(False)
 cpdef MIXERT(Magboltz object):
     cdef double QATT[6][4000]
+    cdef Gasmix MIXOBJECT
     cdef int  IE, KGAS, NP, p, sum, J, i, j, KION, JJ, IL, I
     ECHARG = 1.602176565e-19
 
@@ -32,43 +32,7 @@ cpdef MIXERT(Magboltz object):
                            object.EFINAL, object.AKT, object.ARY, object.TEMPC, object.TORR, object.IPEN,object.PIR2,object.EMTY,object.ETY,object.EATY)
     MIXOBJECT.Run()
 
-    '''for i in range(6):
-        for j in range(6):
-            MIXOBJECT.Gases[i][j][:] = MIXOBJECT.Gases[i].Q[j][:]
-            MIXERTOBJ.PEQEL[i][j][:] = MIXOBJECT.Gases[i].PEQEL[j][:]
 
-        for j in range(250):
-            MIXOBJECT.GasesIN[i][j][:] = MIXOBJECT.Gases[i].QIN[j][:]
-            MIXERTOBJ.PEQIN[i][j][:] = MIXOBJECT.Gases[i].PEQIN[j][:]
-
-        MIXERTOBJ.E[i] = MIXOBJECT.Gases[i].E
-        MIXERTOBJ.EIN[i] = MIXOBJECT.Gases[i].EIN
-        MIXERTOBJ.KIN[i] = MIXOBJECT.Gases[i].KIN
-        for j in range(30):
-            MIXOBJECT.GasesION[i][j][:] = MIXOBJECT.Gases[i].QION[j][:]
-            MIXERTOBJ.PEQION[i][j][:] = MIXOBJECT.Gases[i].PEQION[j][:]
-        MIXERTOBJ.EION[i] = MIXOBJECT.Gases[i].EION
-        MIXERTOBJ.EB[i] = MIXOBJECT.Gases[i].EB
-        MIXERTOBJ.KEL[i] = MIXOBJECT.Gases[i].KEL
-        for j in range(3):
-            MIXERTOBJ.PENFRA[i][j][:] = MIXOBJECT.Gases[i].PENFRA[j][:]
-        MIXERTOBJ.NC0[i] = MIXOBJECT.Gases[i].NC0
-        MIXERTOBJ.EC0[i] = MIXOBJECT.Gases[i].EC0
-        MIXERTOBJ.WK[i] = MIXOBJECT.Gases[i].WK
-        MIXERTOBJ.EFL[i] = MIXOBJECT.Gases[i].EFL
-        MIXERTOBJ.NG1[i] = MIXOBJECT.Gases[i].NG1
-        MIXERTOBJ.NG2[i] = MIXOBJECT.Gases[i].NG2
-        MIXERTOBJ.EG1[i] = MIXOBJECT.Gases[i].EG1
-        MIXERTOBJ.EG2[i] = MIXOBJECT.Gases[i].EG2
-        for j in range(8):
-            MIXOBJECT.GasesATTT[i][j][:] = MIXOBJECT.Gases[i].QATT[j][:]
-        MIXERTOBJ.NIN[i] = MIXOBJECT.Gases[i].NIN
-        MIXERTOBJ.NATT[i] = MIXOBJECT.Gases[i].NATT
-        MIXERTOBJ.NNULL[i] = MIXOBJECT.Gases[i].NNULL
-        MIXERTOBJ.NION[i] = MIXOBJECT.Gases[i].NION
-        MIXERTOBJ.SCLN[i] = MIXOBJECT.Gases[i].SCLN
-        for j in range(10):
-            MIXOBJECT.GasesNULL[i][j][:] = MIXOBJECT.Gases[i].QNULL[j][:]'''
     EMASS = 9.10938291e-31
 
     for IE in range(4000):
