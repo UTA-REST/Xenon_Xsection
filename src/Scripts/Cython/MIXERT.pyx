@@ -1,7 +1,6 @@
 from Magboltz cimport Magboltz
 from libc.math cimport sin, cos, acos, asin, log, sqrt
 from Gasmix cimport Gasmix
-from MIXERT_obj cimport MIXERT_obj
 from libc.string cimport memset
 from ANG cimport ANG
 
@@ -14,7 +13,6 @@ import cython
 cpdef MIXERT(Magboltz object):
     cdef double QATT[6][4000]
     cdef int  IE, KGAS, NP, p, sum, J, i, j, KION, JJ, IL, I
-    cdef MIXERT_obj MIXERTOBJ = MIXERT_obj()
     ECHARG = 1.602176565e-19
 
     object.ESTEP = object.EFINAL / float(object.NSTEP)
