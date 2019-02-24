@@ -1,6 +1,7 @@
 from SETUPT import SETUPT
 import math
 from MIXERT import MIXERT
+from libc.math cimport sin, cos, acos, asin, log, sqrt,pow
 import numpy as np
 cimport numpy as np
 from ELIMITT import ELIMITT
@@ -456,12 +457,29 @@ cdef class Magboltz:
         self.B = 0.0
         self.C = 0.0
         self.Org = 0.0
+        self.DTOVMB = 0.0
+        self.DTMN = 0.0
+        self.DFTER1 = 0.0
+        self.DLOVMB =0.0
+        self.DLMN =0.0
+        self.DFLER1=0.0
+
 
     def expand(self, X):
         Y = self.A + self.B * (X - self.Org) + self.C * (X - self.Org) ** 2
         Y = Y * np.exp(-(X) ** 2 / 0.5)
         return Y + 1
+    def end(self):
+        if self.WZ!=0:
+            self.DTOVMB=self.DIFTR*self.EFIELD/self.WZ
+            self.DTMN=sqrt(2.0*self.DIFTR/self.WZ)*10000.0
+            self.DFTER1=math.sqrt(self.DFTER**2+self.DWZ**2)
+            self.DFTER1=self.DFTER1/2.0
 
+            self.DLOVMB=self.DIFLN*self.EFIELD/self.WZ
+            self.DLMN=sqrt(2.0*self.DIFLN/self.WZ)*10000.0
+            self.DFLER1=sqrt(self.DFLER**2+self.DWZ**2)
+            self.DFLER1=self.DFLER1/2.0
     def Start(self):
         cdef double EOB
         for i in range(182):
@@ -502,6 +520,7 @@ cdef class Magboltz:
                     print("")
                 else:
                     print("")
+            self.end()
             return
             self.TGAS = 273.15 + self.TEMPC
             self.ALPP = self.ALPHA * 760 * self.TGAS / (self.TORR * 293.15)
