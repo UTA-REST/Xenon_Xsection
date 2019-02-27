@@ -8,6 +8,7 @@ from ELIMITT import ELIMITT
 import numpy as np
 from MONTET import MONTET
 from libc.string cimport memset
+from ALPCALCT import ALPCALCT
 cdef extern from "C/RM48.h":
     double DRAND48(double dummy)
     void RM48(double lenv)
@@ -495,7 +496,7 @@ cdef class Magboltz:
 
         Qt = (4 * np.pi * a0 ** 2) / (k ** 2) * (np.sin(np.arctan(eta0))) ** 2
 
-        return Qm * (5.29e-11) ** 2 * 1e20, Qt * (5.29e-11) ** 2 * 1e20
+        return np.nan_to_num(Qm * (5.29e-11) ** 2 * 1e20),np.nan_to_num( Qt * (5.29e-11) ** 2 * 1e20)
 
     def WEIGHT_Q(self, eV, Qm, BashBoltzQm, Lamda, eV0):
         WeightQm = (1 - np.tanh(Lamda * (eV - eV0))) / 2
@@ -504,7 +505,7 @@ cdef class Magboltz:
         NewBashQm = BashBoltzQm * WeightBB
         NewMERTQm = Qm * WeightQm
         NewQm = NewBashQm + NewMERTQm
-        return NewQm
+        return np.nan_to_num(NewQm)
 
     def HYBRID_X_SECTIONS(self, MB_EMTx, MB_EMTy, MB_ETx, MB_ETy, A, D, F, A1, Lambda, eV0):
         Qm_MERT, Qt_MERT = self.MERT(MB_EMTx, A, D, F, A1)
@@ -512,7 +513,7 @@ cdef class Magboltz:
         Qm_MERT, Qt_MERT = self.MERT(MB_ETx, A, D, F, A1)
         New_Qt = self.WEIGHT_Q(MB_ETx, Qt_MERT, MB_ETy, Lambda, eV0)
 
-        return MB_EMTx, New_Qm, MB_ETx, New_Qt
+        return np.nan_to_num(MB_EMTx), np.nan_to_num(New_Qm), np.nan_to_num(MB_ETx), np.nan_to_num(New_Qt)
     def Start(self):
         print(len(self.EMTX))
         cdef double EOB
@@ -527,6 +528,16 @@ cdef class Magboltz:
                                                                                                 self.EATY[i], self.A,
                                                                                                 self.D, self.F, self.A1,
                                                                                                 self.Lambda, self.EV0)
+                if np.isnan(self.EMTY[i]):
+                    self.EMTY[i]=1e-40
+                if np.isnan(self.EMTX[i]):
+                    self.EMTX[i]=1e-40
+                if np.isnan(self.EATY[i]):
+                    self.EATY[i]=1e-40
+                if np.isnan(self.EATX[i]):
+                    self.EATX[i]=1e-40
+        print(self.EMTY[0])
+
         if self.ITHRM != 0:
             SETUPT(self)
             if self.EFINAL == 0.0:
@@ -559,17 +570,16 @@ cdef class Magboltz:
                     print("")
                 else:
                     print("")
-            self.end()
-            return
             self.TGAS = 273.15 + self.TEMPC
             self.ALPP = self.ALPHA * 760 * self.TGAS / (self.TORR * 293.15)
             self.ATTP = self.ATT * 760 * self.TGAS / (self.TORR * 293.15)
             self.SSTMIN = 30
 
             if abs(self.ALPP - self.ATTP) < self.SSTMIN:
+                self.end()
                 return
             if self.BMAG == 0.0:
-                print("")
+                ALPCALCT(self)
             elif self.BTHETA == 0.0 or self.BTHETA == 180:
                 print("")
             elif self.BTHETA == 90:
