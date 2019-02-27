@@ -1,10 +1,11 @@
 from SETUPT import SETUPT
 import math
 from MIXERT import MIXERT
-from libc.math cimport sin, cos, acos, asin, log, sqrt,pow
+from libc.math cimport sin, cos, acos, asin, log, sqrt, pow
 import numpy as np
 cimport numpy as np
 from ELIMITT import ELIMITT
+import numpy as np
 from MONTET import MONTET
 from libc.string cimport memset
 cdef extern from "C/RM48.h":
@@ -453,41 +454,79 @@ cdef class Magboltz:
                      6.36e-9, 5.08e-9, 3.16e-8, 2.14e-9, 1.54e-9, 1.163e-9, 7.25e-10, 4.93e-10, 3.56e-10, 2.69e-10,
                      2.10e-10,
                      1.68e-10, 1.15e-10, 8.3e-11, 6.3e-11, 4.9e-11, 3.9e-11]
+
         self.A = 0.0
-        self.B = 0.0
-        self.C = 0.0
-        self.Org = 0.0
+        self.D = 0.0
+        self.F = 0.0
+        self.A1 = 0.0
+        self.Lambda = 0.0
+        self.EV0 = 0.0
         self.DTOVMB = 0.0
         self.DTMN = 0.0
         self.DFTER1 = 0.0
-        self.DLOVMB =0.0
-        self.DLMN =0.0
-        self.DFLER1=0.0
-
-
-    def expand(self, X):
-        Y = self.A + self.B * (X - self.Org) + self.C * (X - self.Org) ** 2
-        Y = Y * np.exp(-(X) ** 2 / 0.5)
-        return Y + 1
+        self.DLOVMB = 0.0
+        self.DLMN = 0.0
+        self.DFLER1 = 0.0
     def end(self):
-        if self.WZ!=0:
-            self.DTOVMB=self.DIFTR*self.EFIELD/self.WZ
-            self.DTMN=sqrt(2.0*self.DIFTR/self.WZ)*10000.0
-            self.DFTER1=math.sqrt(self.DFTER**2+self.DWZ**2)
-            self.DFTER1=self.DFTER1/2.0
+        if self.WZ != 0:
+            self.DTOVMB = self.DIFTR * self.EFIELD / self.WZ
+            self.DTMN = sqrt(2.0 * self.DIFTR / self.WZ) * 10000.0
+            self.DFTER1 = math.sqrt(self.DFTER ** 2 + self.DWZ ** 2)
+            self.DFTER1 = self.DFTER1 / 2.0
 
-            self.DLOVMB=self.DIFLN*self.EFIELD/self.WZ
-            self.DLMN=sqrt(2.0*self.DIFLN/self.WZ)*10000.0
-            self.DFLER1=sqrt(self.DFLER**2+self.DWZ**2)
-            self.DFLER1=self.DFLER1/2.0
+            self.DLOVMB = self.DIFLN * self.EFIELD / self.WZ
+            self.DLMN = sqrt(2.0 * self.DIFLN / self.WZ) * 10000.0
+            self.DFLER1 = sqrt(self.DFLER ** 2 + self.DWZ ** 2)
+            self.DFLER1 = self.DFLER1 / 2.0
+
+    def MERT(self, epsilon, A, D, F, A1):
+        a0 = 1  # 5.29e-11  # in m
+        hbar = 1  # 197.32697*1e-9 # in eV m
+        m = 1  # 511e3     # eV/c**2
+        alpha = 27.292 * a0 ** 3
+        k = np.sqrt((epsilon) / (13.605 * a0 ** 2))
+
+        eta0 = -A * k * (1 + (4 * alpha) / (3 * a0) * k ** 2 * np.log(k * a0)) \
+               - (np.pi * alpha) / (3 * a0) * k ** 2 + D * k ** 3 + F * k ** 4
+
+        eta1 = (np.pi) / (15 * a0) * alpha * k ** 2 - A1 * k ** 3
+
+        Qm = (4 * np.pi * a0 ** 2) / (k ** 2) * (np.sin(np.arctan(eta0) - np.arctan(eta1))) ** 2
+
+        Qt = (4 * np.pi * a0 ** 2) / (k ** 2) * (np.sin(np.arctan(eta0))) ** 2
+
+        return Qm * (5.29e-11) ** 2 * 1e20, Qt * (5.29e-11) ** 2 * 1e20
+
+    def WEIGHT_Q(self, eV, Qm, BashBoltzQm, Lamda, eV0):
+        WeightQm = (1 - np.tanh(Lamda * (eV - eV0))) / 2
+        WeightBB = (1 + np.tanh(Lamda * (eV - eV0))) / 2
+
+        NewBashQm = BashBoltzQm * WeightBB
+        NewMERTQm = Qm * WeightQm
+        NewQm = NewBashQm + NewMERTQm
+        return NewQm
+
+    def HYBRID_X_SECTIONS(self, MB_EMTx, MB_EMTy, MB_ETx, MB_ETy, A, D, F, A1, Lambda, eV0):
+        Qm_MERT, Qt_MERT = self.MERT(MB_EMTx, A, D, F, A1)
+        New_Qm = self.WEIGHT_Q(MB_EMTx, Qm_MERT, MB_EMTy, Lambda, eV0)
+        Qm_MERT, Qt_MERT = self.MERT(MB_ETx, A, D, F, A1)
+        New_Qt = self.WEIGHT_Q(MB_ETx, Qt_MERT, MB_ETy, Lambda, eV0)
+
+        return MB_EMTx, New_Qm, MB_ETx, New_Qt
     def Start(self):
+        print(len(self.EMTX))
         cdef double EOB
-        for i in range(182):
-            self.EMTY[i] = self.EMTY[i] * self.expand(self.EMTX[i])
-        for i in range(153):
-            self.ETY[i] = self.ETY[i] * self.expand(self.ETX[i])
-        for i in range(182):
-            self.EATY[i] = self.EATY[i] * self.expand(self.EATX[i])
+        cdef int i = 0
+
+        print("HERE")
+        if self.A != 0 and self.F != 0 and self.D != 0 and self.A1 != 0 and self.Lambda != 0 and self.EV0 != 0:
+            for i in range(182):
+                self.EMTX[i], self.EMTY[i], self.EATX[i], self.EATY[i] = self.HYBRID_X_SECTIONS(self.EMTX[i],
+                                                                                                self.EMTY[i],
+                                                                                                self.EATX[i],
+                                                                                                self.EATY[i], self.A,
+                                                                                                self.D, self.F, self.A1,
+                                                                                                self.Lambda, self.EV0)
         if self.ITHRM != 0:
             SETUPT(self)
             if self.EFINAL == 0.0:

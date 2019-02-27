@@ -1,9 +1,37 @@
+import sys
+import warnings
+import time
+import numpy as np
+warnings.filterwarnings("ignore", message="numpy.dtype size changed")
+warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
+sys.path.append('../../src/Scripts/Python')
 
+from Magboltz import Magboltz
+
+obj = Magboltz()
+
+EMTY=[]
+EMTX=[]
+EATY=[]
+EATX =[]
+for i in range(8):
+    obj.__init__()
+    obj.NGAS =1
+    obj.NMAX = 10
+    obj.IPEN = 0
+    obj.ITHRM=1
+    obj.EFINAL = 0.0
+    obj.NGASN=[7,0,0,0,0,0]
+    obj.FRAC=[100,0,0,0,0,0]
+    obj.TEMPC = 23
+    obj.TORR = 750.062
     obj.EFIELD = float(input("Enter EFIELD:"))
-    obj.A = float(input("Enter A:"))
-    obj.B = float(input("Enter B:"))
-    obj.C = float(input("Enter C:"))
-    obj.Org = float(input("Enter Org:"))
+    obj.A = 1
+    obj.D = 1
+    obj.F = 2
+    obj.A1 = 2
+    obj.Lambda = 3
+    obj.EV0 = 0.75
     obj.BMAG = 0
     obj.BTHETA = 90
     try:
