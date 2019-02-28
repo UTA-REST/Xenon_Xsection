@@ -4,7 +4,6 @@ from libc.string cimport memset
 from SORTT cimport SORTT
 from libc.stdlib cimport malloc, free
 import cython
-from goto import with_goto
 import numpy as np
 from SPLANET cimport SPLANET
 from Magboltz cimport drand48
