@@ -1,20 +1,22 @@
 from Magboltz cimport Magboltz
 from libc.math cimport sin, cos, acos, asin, log, sqrt,pow
-from libc.string cimport memset
-from Magboltz cimport drand48
-from SORTT cimport SORTT
-from libc.stdlib cimport malloc, free
+
 import cython
-import numpy as np
 from MONTEFTT import MONTEFTT
-from FRIEDLANDT import FRIEDLANDT
+from FRIEDLANDT cimport FRIEDLANDT
 from MONTEFDT import MONTEFDT
-from PT import PT
+from PT cimport PT
 from TOF import TOF
 from SST import SST
-cpdef ALPCALCT(Magboltz object):
 
-    IMAX = object.NMAX / 10000000
+
+@cython.cdivision(True)
+@cython.boundscheck(False)
+@cython.wraparound(False)
+cpdef ALPCALCT(Magboltz object):
+    cdef int IMAX,JPRT,I
+    cdef double ANETP,ANET,TCUTH,TCUTL,ZCUTH,ZCUTL,ALPHAD,ALP1,ATT1,ALP1ERR,ATT1ER,ANET2,ZSTEPM,WRZN,FC1,FC2,ALPTEST
+    IMAX = <int>(object.NMAX / 10000000)
     if IMAX < 5:
         IMAX = 5
     object.NMAX = IMAX * 10000000
@@ -48,7 +50,7 @@ cpdef ALPCALCT(Magboltz object):
         object.VDST = object.WZ * 1e-5
         object.FAKEI = ALPHAD * object.WZ * 1e-12
         object.ALPHAST = 0.85 * abs(ALPHAD + ANET)
-        object.TSTEP = np.log(3) / (object.ALPHAST * object.VDST * 1e5)
+        object.TSTEP = log(3) / (object.ALPHAST * object.VDST * 1e5)
         if object.TSTEP > TCUTH:
             object.TSTEP = TCUTH
         if object.TSTEP < TCUTL:
@@ -90,8 +92,8 @@ cpdef ALPCALCT(Magboltz object):
         else:
             object.ALPHAST *= 8
 
-    object.TSTEP = np.log(3) / (object.ALPHAST * object.VDST * 1e5)
-    object.ZSTEP = np.log(3) / object.ALPHAST
+    object.TSTEP = log(3) / (object.ALPHAST * object.VDST * 1e5)
+    object.ZSTEP = log(3) / object.ALPHAST
 
     if object.TSTEP > TCUTH and ALPHAD != 0.0:
         object.TSTEP = TCUTH
@@ -129,4 +131,4 @@ cpdef ALPCALCT(Magboltz object):
     WRZN = object.TOFWR*1e5
     FC1 = WRZN/(2*object.TOFDL)
     FC2 = ((object.RALPHA-object.RATTOF)*1e12)/object.TOFDL
-    ALPTEST = FC1-math.sqrt(FC1**2-FC2)
+    ALPTEST = FC1-sqrt(FC1**2-FC2)

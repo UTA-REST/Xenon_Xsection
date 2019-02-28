@@ -518,23 +518,31 @@ cdef class Magboltz:
         print(len(self.EMTX))
         cdef double EOB
         cdef int i = 0
-
+        cdef double temp[182]
+        memset(temp, 0, 182 * sizeof(double))
         print("HERE")
         if self.A != 0 and self.F != 0 and self.D != 0 and self.A1 != 0 and self.Lambda != 0 and self.EV0 != 0:
             for i in range(182):
-                self.EMTX[i], self.EMTY[i], self.EATX[i], self.EATY[i] = self.HYBRID_X_SECTIONS(self.EMTX[i],
+                self.EMTX[i], self.EMTY[i], self.EATX[i], temp[i] = self.HYBRID_X_SECTIONS(self.EMTX[i],
                                                                                                 self.EMTY[i],
                                                                                                 self.EATX[i],
-                                                                                                self.EATY[i], self.A,
+                                                                                                temp[i], self.A,
                                                                                                 self.D, self.F, self.A1,
                                                                                                 self.Lambda, self.EV0)
+            for i in range(153):
+                self.EMTX[i], temp[i], self.ETX[i], self.ETY[i] = self.HYBRID_X_SECTIONS(self.EMTX[i],
+                                                                                temp[i],
+                                                                                self.ETX[i],
+                                                                                self.ETY[i], self.A,
+                                                                                self.D, self.F, self.A1,
+                                                                                self.Lambda, self.EV0)
                 if np.isnan(self.EMTY[i]):
                     self.EMTY[i]=1e-40
                 if np.isnan(self.EMTX[i]):
                     self.EMTX[i]=1e-40
-                if np.isnan(self.EATY[i]):
+                if np.isnan(self.ETY[i]):
                     self.EATY[i]=1e-40
-                if np.isnan(self.EATX[i]):
+                if np.isnan(self.ETX[i]):
                     self.EATX[i]=1e-40
         print(self.EMTY[0])
 
@@ -560,8 +568,7 @@ cdef class Magboltz:
             else:
                 MIXERT(self)
             if self.BMAG == 0:
-                print(self.EFINAL)
-                print(self.ESTART)
+                print("MONT")
                 MONTET(self)
             else:
                 if self.BTHETA == 0 or self.BTHETA == 180:
@@ -579,6 +586,7 @@ cdef class Magboltz:
                 self.end()
                 return
             if self.BMAG == 0.0:
+                print("ALP")
                 ALPCALCT(self)
             elif self.BTHETA == 0.0 or self.BTHETA == 180:
                 print("")
@@ -586,6 +594,8 @@ cdef class Magboltz:
                 print("")
             else:
                 print("")
+            self.end()
+            return
         else:
             print("")
             if self.EFINAL == 0.0:

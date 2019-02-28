@@ -6,9 +6,9 @@ warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 sys.path.append('../../src/Scripts/Python')
 
-from Magboltz import Magboltz
+from object import object
 
-obj = Magboltz()
+obj = object()
 E = [50,100,150,200,250,300,350,400]
 for i in range(8):
     obj.__init__()
