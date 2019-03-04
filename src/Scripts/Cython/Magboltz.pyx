@@ -515,12 +515,11 @@ cdef class Magboltz:
 
         return np.nan_to_num(MB_EMTx), np.nan_to_num(New_Qm), np.nan_to_num(MB_ETx), np.nan_to_num(New_Qt)
     def Start(self):
-        print(len(self.EMTX))
         cdef double EOB
         cdef int i = 0
         cdef double temp[182]
         memset(temp, 0, 182 * sizeof(double))
-        print("HERE")
+
         if self.A != 0 and self.F != 0 and self.D != 0 and self.A1 != 0 and self.Lambda != 0 and self.EV0 != 0:
             for i in range(182):
                 self.EMTX[i], self.EMTY[i], self.EATX[i], temp[i] = self.HYBRID_X_SECTIONS(self.EMTX[i],
@@ -555,8 +554,10 @@ cdef class Magboltz:
                     self.EFINAL = 8.0
                 self.ESTART = self.EFINAL / 50.0
                 while self.IELOW == 1:
+                    print("MIXERT")
                     MIXERT(self)
                     if self.BMAG == 0 or self.BTHETA == 0 or abs(self.BTHETA) == 180:
+                        print("ELIMITT")
                         ELIMITT(self)
                     elif self.BTHETA == 90:
                         print("")
@@ -565,10 +566,11 @@ cdef class Magboltz:
                     if self.IELOW == 1:
                         self.EFINAL = self.EFINAL * math.sqrt(2)
                         self.ESTART = self.EFINAL / 50
+                print("Calculated the final energy = "+str(self.EFINAL))
             else:
                 MIXERT(self)
             if self.BMAG == 0:
-                print("MONT")
+                print("MONTE")
                 MONTET(self)
             else:
                 if self.BTHETA == 0 or self.BTHETA == 180:
