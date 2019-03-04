@@ -565,6 +565,7 @@ cdef class Magboltz:
                         print("")
                     if self.IELOW == 1:
                         self.EFINAL = self.EFINAL * math.sqrt(2)
+                        print("Calculated the final energy = "+str(self.EFINAL))
                         self.ESTART = self.EFINAL / 50
                 print("Calculated the final energy = "+str(self.EFINAL))
             else:
