@@ -496,7 +496,7 @@ cdef class Magboltz:
 
         Qt = (4 * np.pi * a0 ** 2) / (k ** 2) * (np.sin(np.arctan(eta0))) ** 2
 
-        return np.nan_to_num(Qm * (5.29e-11) ** 2 * 1e20),np.nan_to_num( Qt * (5.29e-11) ** 2 * 1e20)
+        return Qm * (5.29e-11) ** 2 * 1e20, Qt * (5.29e-11) ** 2 * 1e20
 
     def WEIGHT_Q(self, eV, Qm, BashBoltzQm, Lamda, eV0):
         WeightQm = (1 - np.tanh(Lamda * (eV - eV0))) / 2
@@ -505,7 +505,7 @@ cdef class Magboltz:
         NewBashQm = BashBoltzQm * WeightBB
         NewMERTQm = Qm * WeightQm
         NewQm = NewBashQm + NewMERTQm
-        return np.nan_to_num(NewQm)
+        return NewQm
 
     def HYBRID_X_SECTIONS(self, MB_EMTx, MB_EMTy, MB_ETx, MB_ETy, A, D, F, A1, Lambda, eV0):
         Qm_MERT, Qt_MERT = self.MERT(MB_EMTx, A, D, F, A1)
@@ -513,10 +513,11 @@ cdef class Magboltz:
         Qm_MERT, Qt_MERT = self.MERT(MB_ETx, A, D, F, A1)
         New_Qt = self.WEIGHT_Q(MB_ETx, Qt_MERT, MB_ETy, Lambda, eV0)
 
-        return np.nan_to_num(MB_EMTx), np.nan_to_num(New_Qm), np.nan_to_num(MB_ETx), np.nan_to_num(New_Qt)
+        return MB_EMTx, New_Qm, MB_ETx, New_Qt
     def Start(self):
         cdef double EOB
         cdef int i = 0
+        cdef double firstnotnanEMTY;
         cdef double temp[182]
         memset(temp, 0, 182 * sizeof(double))
 
@@ -528,22 +529,19 @@ cdef class Magboltz:
                                                                                                 temp[i], self.A,
                                                                                                 self.D, self.F, self.A1,
                                                                                                 self.Lambda, self.EV0)
+
             for i in range(153):
                 self.EMTX[i], temp[i], self.ETX[i], self.ETY[i] = self.HYBRID_X_SECTIONS(self.EMTX[i],
                                                                                 temp[i],
                                                                                 self.ETX[i],
                                                                                 self.ETY[i], self.A,
                                                                                 self.D, self.F, self.A1,
+
                                                                                 self.Lambda, self.EV0)
-                if np.isnan(self.EMTY[i]):
-                    self.EMTY[i]=1e-40
-                if np.isnan(self.EMTX[i]):
-                    self.EMTX[i]=1e-40
-                if np.isnan(self.ETY[i]):
-                    self.EATY[i]=1e-40
-                if np.isnan(self.ETX[i]):
-                    self.EATX[i]=1e-40
-        print(self.EMTY[0])
+            # getting rid of nan
+            self.EMTY[0]=131
+            self.ETY[0]=131
+
 
         if self.ITHRM != 0:
             SETUPT(self)

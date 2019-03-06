@@ -27,6 +27,7 @@ for i in range(24):
     obj.NMAX =1
     obj.IPEN = 0
     obj.ITHRM=1
+    obj.NANISO = 0 #<<<<<<<< THIS IS IT
     obj.EFINAL = 0.0
     obj.NGASN=[1,2,0,0,0,0]
     obj.FRAC=prec[i%12]

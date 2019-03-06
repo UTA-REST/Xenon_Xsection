@@ -32,6 +32,8 @@ cdef void GERJAN(double RDUM, double API,double *RNMX):
 @cython.boundscheck(False)
 @cython.wraparound(False)
 cpdef MONTET(Magboltz Object):
+    #TODO: change number of steps from 10 to something else
+    #TODO: print similar ouput (on new lines).
     Object.WX = 0.0
     Object.WY = 0.0
     Object.DWX = 0.0
@@ -87,7 +89,7 @@ cpdef MONTET(Magboltz Object):
     DFZZST = <double *> malloc(10 * sizeof(double))
     memset(DFZZST, 0, 10 * sizeof(double))
 
-    DFYYST = <double *> malloc(10 * sizeof(double))
+    DFYYST = <double *> malloc(10 * sizeof(double))       
     memset(DFYYST, 0, 10 * sizeof(double))
 
     DFXXST = <double *> malloc(10 * sizeof(double))
