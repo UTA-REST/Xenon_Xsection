@@ -536,7 +536,6 @@ cdef class Magboltz:
                                                                                 self.ETX[i],
                                                                                 self.ETY[i], self.A,
                                                                                 self.D, self.F, self.A1,
-
                                                                                 self.Lambda, self.EV0)
             # getting rid of nan
             self.EMTY[0]=131
