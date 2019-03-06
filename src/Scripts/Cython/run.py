@@ -24,6 +24,7 @@ for i in range(8):
     obj.NGASN=[7,0,0,0,0,0]
     obj.FRAC=[100,0,0,0,0,0]
     obj.TEMPC = 23
+    obj.NANISO = 0 #<<<<<<<< THIS IS IT
     obj.TORR = 750.062
     obj.EFIELD = float(input("Enter EFIELD:"))
     obj.A = -6.09
